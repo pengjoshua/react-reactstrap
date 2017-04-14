@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ReactStrap</title>
+  <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://unpkg.com/react@latest/dist/react.js"></script>
+  <script src="https://unpkg.com/react-dom@latest/dist/react-dom.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+
+    class Navbar extends React.Component {
+      change(page) {
+        this.props.change(page);
+      }
+      render() {
+        return (
+          <nav className="navbar navbar-default">
+            <div className="container">
+              <div className="navbar-header">
+                <a className="navbar-brand" href="#">{this.props.brand}</a>
+              </div>
+              <div id="navbar">
+                <ul className="nav navbar-nav">
+                  <li className={(this.props.currentPage === 'home') ? 'active' : ''}><a onClick={this.change.bind(this, 'home')} href="#">Home</a></li>
+                  <li className={(this.props.currentPage === 'about') ? 'active' : ''}><a onClick={this.change.bind(this, 'about')}href="#">About</a></li>
+                  <li className={(this.props.currentPage === 'contact') ? 'active' : ''}><a onClick={this.change.bind(this, 'contact')}href="#">Contact</a></li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        );
+      };
+    };
+
+    class Jumbotron extends React.Component {
+      render() {
+        return (
+          <div>
+            <div className="jumbotron">
+              <div className="container">
+                <h1>{this.props.heading}</h1>
+                <p className="lead">{this.props.text}</p>
+                <p><a className="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+              </div>
+            </div>
+          </div>
+        );
+      };
+    };
+
+    class Page extends React.Component {
+      render() {
+        let pageContent;
+        if (this.props.currentPage === 'home') {
+          pageContent = 'This is the home page';
+        } else if (this.props.currentPage === 'about') {
+          pageContent = 'This is the about page';
+        } else if (this.props.currentPage === 'contact') {
+          pageContent = 'This is the contact page';
+        } else {
+          pageContent = 'This is the home page';
+        }
+        return (
+          <div>
+            <div className="container">
+              <h2>{this.props.currentPage.charAt(0).toUpperCase() + this.props.currentPage.slice(1)}</h2>
+              {pageContent}
+            </div>
+          </div>
+        );
+      };
+    };
+
+    class Theme extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          currentPage: 'home'
+        };
+      }
+      handleChange(page) {
+        this.setState({currentPage: page});
+      }
+      render() {
+        let jumbotron;
+        if (this.state.currentPage === 'home') {
+          jumbotron = <Jumbotron heading={this.props.heading} text={this.props.text} />;
+        } else {
+          jumbotron = '';
+        }
+        return (
+          <div>
+            <Navbar currentPage={this.state.currentPage} brand={this.props.brand} change={this.handleChange.bind(this)} />
+            {jumbotron}
+            <Page currentPage={this.state.currentPage} />
+          </div>
+        );
+      };
+    };
+    Theme.defaultProps = {
+      brand: 'ReactStrap',
+      heading: 'Hello, world!',
+      text: 'This is a Bootstrap theme that uses React.js components'
+    };
+
+    ReactDOM.render(
+      <div>
+        <Theme />
+      </div>,
+      document.getElementById('root')
+    );
+
+  </script>
+</body>
+</html>
